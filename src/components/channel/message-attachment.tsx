@@ -15,7 +15,7 @@ export function MessageAttachment({ url, name, type }: MessageAttachmentProps) {
         <img
           src={url}
           alt={name}
-          className="max-h-[300px] max-w-full rounded-lg border border-border object-contain cursor-pointer hover:opacity-90 transition-opacity"
+          className="max-h-[300px] max-w-full rounded-lg border border-border object-contain cursor-pointer transition-all duration-200 hover:opacity-90 hover:shadow-lg hover:shadow-black/20"
         />
       </a>
     );
@@ -25,7 +25,7 @@ export function MessageAttachment({ url, name, type }: MessageAttachmentProps) {
     <a
       href={url}
       download={name}
-      className="mt-1 inline-flex items-center gap-2 rounded-lg border border-border bg-[#1e1f22] px-3 py-2 hover:bg-[#2b2d31] transition-colors"
+      className="mt-1 inline-flex items-center gap-2 rounded-lg border border-border bg-[#1e1f22] px-3 py-2 transition-all duration-150 hover:bg-[#2b2d31] hover:border-border/80 hover:shadow-md hover:shadow-black/10 active:scale-[0.98]"
     >
       <FileIcon className="h-5 w-5 text-muted-foreground shrink-0" />
       <span className="text-sm text-primary truncate max-w-[200px]">{name}</span>

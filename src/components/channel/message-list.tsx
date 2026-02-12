@@ -35,6 +35,12 @@ export function MessageList({
   const { mutate: updateMsg } = useUpdateMessage(channelId);
   const { mutate: deleteMsg } = useDeleteMessage(channelId);
 
+  // Track initial message IDs so we only animate NEW messages
+  const initialIdsRef = useRef<Set<string> | null>(null);
+  if (initialIdsRef.current === null) {
+    initialIdsRef.current = new Set(messages.map((m) => m.id));
+  }
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages.length]);
@@ -66,9 +72,11 @@ export function MessageList({
 
             const isOwn = message.user_id === currentUserId;
             const replyCount = replyCounts[message.id] ?? 0;
+            const isNew = !initialIdsRef.current!.has(message.id);
+            const animClass = isNew ? (isOwn ? "msg-sent" : "msg-new") : "";
 
             return (
-              <div key={message.id}>
+              <div key={message.id} className={animClass}>
                 {showDateSep && <DateSeparator dateStr={message.created_at} />}
                 <div
                   className={`message-row group relative flex gap-2 px-2 py-0.5 ${
@@ -122,11 +130,13 @@ export function MessageList({
                           {message.content}
                         </p>
                         {message.attachment_url && message.attachment_name && message.attachment_type && (
-                          <MessageAttachment
-                            url={message.attachment_url}
-                            name={message.attachment_name}
-                            type={message.attachment_type}
-                          />
+                          <div className={isNew ? "attach-in" : ""}>
+                            <MessageAttachment
+                              url={message.attachment_url}
+                              name={message.attachment_name}
+                              type={message.attachment_type}
+                            />
+                          </div>
                         )}
                       </>
                     )}

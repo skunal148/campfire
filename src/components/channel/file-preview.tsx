@@ -20,7 +20,7 @@ export function FilePreview({ file, onRemove }: FilePreviewProps) {
   }, [file, isImage]);
 
   return (
-    <div className="relative inline-flex items-center gap-2 rounded-lg border border-border bg-[#1e1f22] p-2">
+    <div className="file-preview-in relative inline-flex items-center gap-2 rounded-lg border border-border bg-[#1e1f22] p-2">
       {isImage && preview ? (
         <img
           src={preview}
@@ -40,7 +40,7 @@ export function FilePreview({ file, onRemove }: FilePreviewProps) {
       </div>
       <button
         onClick={onRemove}
-        className="absolute -right-2 -top-2 rounded-full bg-[#3f4147] p-0.5 text-muted-foreground hover:text-foreground"
+        className="absolute -right-2 -top-2 rounded-full bg-[#3f4147] p-0.5 text-muted-foreground transition-all duration-150 hover:text-foreground hover:bg-red-500/20 hover:text-red-400 hover:scale-110 active:scale-90"
       >
         <X className="h-3.5 w-3.5" />
       </button>

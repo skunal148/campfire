@@ -17,6 +17,8 @@ interface MessageInputProps {
 export function MessageInput({ channelId, channelName, onTyping }: MessageInputProps) {
   const [content, setContent] = useState("");
   const [pendingFile, setPendingFile] = useState<File | null>(null);
+  const [isDragOver, setIsDragOver] = useState(false);
+  const [sendAnimating, setSendAnimating] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const lastTypingRef = useRef(0);
   const { mutate: send, isPending } = useSendMessage(channelId);
@@ -25,6 +27,10 @@ export function MessageInput({ channelId, channelName, onTyping }: MessageInputP
   const handleSubmit = useCallback(async () => {
     const trimmed = content.trim();
     if ((!trimmed && !pendingFile) || isPending || isUploading) return;
+
+    // Trigger send button animation
+    setSendAnimating(true);
+    setTimeout(() => setSendAnimating(false), 400);
 
     let attachment: { url: string; name: string; type: string } | undefined;
     if (pendingFile) {
@@ -85,23 +91,36 @@ export function MessageInput({ channelId, channelName, onTyping }: MessageInputP
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
   };
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    setIsDragOver(false);
     const file = e.dataTransfer.files[0];
     if (file) setPendingFile(file);
   };
 
   return (
-    <div className="border-t border-border px-4 py-3" onDragOver={handleDragOver} onDrop={handleDrop}>
+    <div
+      className="border-t border-border px-4 py-3"
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+    >
       {pendingFile && (
-        <div className="mb-2">
+        <div className="mb-2 file-preview-in">
           <FilePreview file={pendingFile} onRemove={() => setPendingFile(null)} />
         </div>
       )}
-      <div className="input-container flex items-end gap-2 rounded-lg border border-border bg-[#2b2d31] px-3 py-2">
+      <div className={`input-container flex items-end gap-2 rounded-lg border border-border bg-[#2b2d31] px-3 py-2 ${isDragOver ? "drag-over" : ""}`}>
         <AttachMenu onFileSelect={setPendingFile} />
         <textarea
           ref={textareaRef}
@@ -123,7 +142,7 @@ export function MessageInput({ channelId, channelName, onTyping }: MessageInputP
         <button
           onClick={handleSubmit}
           disabled={(!content.trim() && !pendingFile) || isPending || isUploading}
-          className="send-btn shrink-0 rounded p-1.5 text-muted-foreground disabled:opacity-30"
+          className={`send-btn shrink-0 rounded p-1.5 text-muted-foreground disabled:opacity-30 ${sendAnimating ? "send-fly" : ""}`}
         >
           <Send className="h-4 w-4" />
         </button>
