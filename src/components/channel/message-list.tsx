@@ -76,11 +76,11 @@ export function MessageList({
             const animClass = isNew ? (isOwn ? "msg-sent" : "msg-new") : "";
 
             return (
-              <div key={message.id} className={animClass}>
+              <div key={message.id}>
                 {showDateSep && <DateSeparator dateStr={message.created_at} />}
                 <div
-                  className={`message-row group relative flex gap-2 px-2 py-[3px] ${
-                    showHeader ? "mt-3 first:mt-0" : ""
+                  className={`message-row group relative flex gap-2 px-2 ${animClass} ${
+                    showHeader ? "mt-3 pt-1 first:mt-0" : "py-px"
                   }`}
                 >
                   <MessageActions

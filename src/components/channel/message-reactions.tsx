@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { SmilePlus } from "lucide-react";
 import { useReactions, useToggleReaction } from "@/lib/hooks/use-reactions";
 import { EmojiPicker } from "./emoji-picker";
@@ -15,28 +15,31 @@ export function MessageReactions({ messageId, currentUserId }: MessageReactionsP
   const { data: groups } = useReactions(messageId);
   const { mutate: toggle } = useToggleReaction(messageId);
 
-  // Track known emojis to detect new reactions
-  const knownRef = useRef<Set<string>>(new Set());
+  // Track previous reaction state to detect genuinely new reactions
+  const prevKeyRef = useRef<string>("");
+
+  const currentKey = groups
+    ? groups.map((g) => `${g.emoji}:${g.count}`).join(",")
+    : "";
+
+  const changed = prevKeyRef.current !== "" && prevKeyRef.current !== currentKey;
+
+  useEffect(() => {
+    prevKeyRef.current = currentKey;
+  }, [currentKey]);
 
   if (!groups || groups.length === 0) return null;
-
-  const currentKeys = new Set(groups.map((g) => `${g.emoji}-${g.count}`));
 
   return (
     <div className="mt-1 flex flex-wrap items-center gap-1">
       {groups.map((g: ReactionGroup) => {
         const hasReacted = g.userIds.includes(currentUserId);
-        const key = `${g.emoji}-${g.count}`;
-        const isNew = !knownRef.current.has(key);
-        // Update known set after render check
-        knownRef.current = currentKeys;
-
         return (
           <button
             key={g.emoji}
             onClick={() => toggle(g.emoji)}
             className={`reaction-btn inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs ${
-              isNew ? "reaction-pop" : ""
+              changed ? "reaction-pop" : ""
             } ${
               hasReacted
                 ? "border-primary/50 bg-primary/10 text-primary"

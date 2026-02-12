@@ -36,8 +36,10 @@ export function EmojiPicker({ onSelect, onOpenChange, children }: EmojiPickerPro
       <PopoverTrigger asChild>{children}</PopoverTrigger>
       <PopoverContent
         className="w-auto border-border bg-transparent p-0 shadow-xl"
+        side="top"
         align="end"
         sideOffset={8}
+        collisionPadding={16}
       >
         <Picker
           data={data}
