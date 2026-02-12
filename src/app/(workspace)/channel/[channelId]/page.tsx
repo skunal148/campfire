@@ -11,27 +11,21 @@ interface ChannelPageProps {
 export default async function ChannelPage({ params }: ChannelPageProps) {
   const { channelId } = await params;
 
-  const [profile, channel] = await Promise.all([
+  // Run ALL queries in parallel instead of sequentially
+  const [profile, channel, messages, isGlobalAdmin] = await Promise.all([
     getCurrentProfile(),
     getChannel(channelId).catch(() => null),
+    getMessages(channelId).catch(() => []),
+    checkIsGlobalAdmin().catch(() => false),
   ]);
 
   if (!profile) redirect("/login");
   if (!channel) notFound();
 
-  // Ensure user is a member (auto-join public channels)
+  // Auto-join public channels (fire-and-forget, don't block render)
   if (!channel.is_private) {
-    try {
-      await joinChannel(channelId);
-    } catch {
-      // Already a member or other non-critical error
-    }
+    joinChannel(channelId).catch(() => {});
   }
-
-  const [messages, isGlobalAdmin] = await Promise.all([
-    getMessages(channelId),
-    checkIsGlobalAdmin(),
-  ]);
 
   return (
     <ChannelView
