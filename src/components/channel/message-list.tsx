@@ -57,7 +57,7 @@ export function MessageList({
   return (
     <>
       <ScrollArea className="flex-1 px-4">
-        <div className="space-y-1 py-4">
+        <div className="py-4">
           {messages.map((message, index) => {
             const prevMessage = messages[index - 1];
             const showDateSep =
@@ -79,8 +79,8 @@ export function MessageList({
               <div key={message.id} className={animClass}>
                 {showDateSep && <DateSeparator dateStr={message.created_at} />}
                 <div
-                  className={`message-row group relative flex gap-2 px-2 py-0.5 ${
-                    showHeader ? "mt-4 first:mt-0" : ""
+                  className={`message-row group relative flex gap-2 px-2 py-[3px] ${
+                    showHeader ? "mt-3 first:mt-0" : ""
                   }`}
                 >
                   <MessageActions

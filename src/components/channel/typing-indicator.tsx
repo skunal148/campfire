@@ -8,7 +8,7 @@ interface TypingIndicatorProps {
 
 export function TypingIndicator({ typingUsers }: TypingIndicatorProps) {
   if (typingUsers.length === 0) {
-    return <div className="h-5 px-4" />;
+    return <div className="h-4 px-4" />;
   }
 
   const names = typingUsers.map((u) => u.displayName);
