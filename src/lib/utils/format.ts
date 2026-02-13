@@ -1,4 +1,11 @@
-export function formatTime(dateStr: string) {
+export function formatTime(dateStr: string, short?: boolean) {
+  if (short) {
+    return new Date(dateStr).toLocaleTimeString([], {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: false,
+    });
+  }
   return new Date(dateStr).toLocaleTimeString([], {
     hour: "numeric",
     minute: "2-digit",

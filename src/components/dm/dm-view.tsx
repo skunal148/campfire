@@ -93,7 +93,7 @@ export function DMView({
 
   return (
     <div className="flex flex-1 overflow-hidden">
-      <div className="flex flex-1 flex-col">
+      <div className="flex flex-1 flex-col overflow-hidden">
         <DMHeader
           otherUser={otherUser}
           channelId={channel.id}

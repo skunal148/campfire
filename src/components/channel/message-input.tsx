@@ -110,7 +110,7 @@ export function MessageInput({ channelId, channelName, onTyping }: MessageInputP
 
   return (
     <div
-      className="px-4 pb-3 pt-1"
+      className="shrink-0 border-t border-border px-4 py-3"
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}

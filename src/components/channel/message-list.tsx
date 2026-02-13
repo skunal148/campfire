@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { MessageSquare } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -56,7 +56,7 @@ export function MessageList({
 
   return (
     <>
-      <ScrollArea className="flex-1 px-4">
+      <ScrollArea className="min-h-0 flex-1 px-4">
         <div className="py-4">
           {messages.map((message, index) => {
             const prevMessage = messages[index - 1];
@@ -76,11 +76,11 @@ export function MessageList({
             const animClass = isNew ? (isOwn ? "msg-sent" : "msg-new") : "";
 
             return (
-              <div key={message.id}>
+              <Fragment key={message.id}>
                 {showDateSep && <DateSeparator dateStr={message.created_at} />}
                 <div
-                  className={`message-row group relative flex gap-2 px-2 ${animClass} ${
-                    showHeader ? "mt-3 pt-1 first:mt-0" : "py-px"
+                  className={`message-row group relative flex items-start gap-2 px-2 ${animClass} ${
+                    showHeader ? "pt-3" : ""
                   }`}
                 >
                   <MessageActions
@@ -98,9 +98,9 @@ export function MessageList({
                       </AvatarFallback>
                     </Avatar>
                   ) : (
-                    <div className="w-8 shrink-0 text-center">
-                      <span className="invisible text-[10px] text-muted-foreground group-hover:visible">
-                        {formatTime(message.created_at)}
+                    <div className="w-8 shrink-0 pt-px text-center">
+                      <span className="invisible text-[10px] leading-none text-muted-foreground group-hover:visible">
+                        {formatTime(message.created_at, true)}
                       </span>
                     </div>
                   )}
@@ -126,7 +126,7 @@ export function MessageList({
                       />
                     ) : (
                       <>
-                        <p className="text-sm text-foreground break-words whitespace-pre-wrap">
+                        <p className="text-sm leading-[22px] text-foreground break-words whitespace-pre-wrap">
                           {message.content}
                         </p>
                         {message.attachment_url && message.attachment_name && message.attachment_type && (
@@ -152,7 +152,7 @@ export function MessageList({
                     )}
                   </div>
                 </div>
-              </div>
+              </Fragment>
             );
           })}
           <div ref={bottomRef} />

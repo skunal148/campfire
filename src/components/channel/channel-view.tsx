@@ -96,7 +96,7 @@ export function ChannelView({
 
   return (
     <div className="flex flex-1 overflow-hidden">
-      <div className="flex flex-1 flex-col">
+      <div className="flex flex-1 flex-col overflow-hidden">
         <ChannelHeader
           channel={channel}
           currentUserId={currentUserId}
